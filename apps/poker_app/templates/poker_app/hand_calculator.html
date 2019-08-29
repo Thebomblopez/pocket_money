@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Homepage</title>
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <!-- Link for materialize icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+<style>
+    .inlineb {
+        display: inline-block;
+    }
+
+    /* Add a little padding */
+    .pad2 {
+        padding: 2%;
+    }
+
+    .box {
+        outline: 1px solid black;
+        vertical-align: top;
+    }
+
+    .board {
+        width: 85%;
+        margin: 1% 8%;
+        background-color: #00c853;
+        height: 450px;
+    }
+    
+    .width-80 {
+        width: 80%;
+    }
+    /* Add Margin */
+    .margin-top10 {
+        margin-top: 10%;
+    }
+
+    /* Card ID */
+    #card {
+        height: 24%;
+    }
+
+    #playercard {
+        margin: 2% 17% 0;
+        width: 15%;
+    }
+</style>
+
+<body style="padding: 1% 0;">
+    <!-- Display players cards as words on left hand side -->
+    <div class="inlineb left" style="margin-left: 4%">
+        <span>Your Cards:</span>
+        {% if hand_cards %}
+        <p>
+            {{ hand_cards.0.0 }} of {{ hand_cards.0.1 }}
+        </p>
+        <p>
+            {{ hand_cards.1.0 }} of {{ hand_cards.1.1 }}
+        </p>
+        {% endif %}
+
+        <!-- Display hand and possibilitties -->
+
+    </div>
+    <!-- Maing Content -->
+    <div id="wrapper" class="container">
+        <!-- Top nav a bar and display messages. -->
+        <nav>
+            <div class="nav-wrapper green accent-4 z-depth-2">
+                <a href="/" class="brand-logo center">PocketMoney</a>
+            </div>
+        </nav>
+        <div id="flash_messages">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                    {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <!-- Modal Triggers -->
+        <p class="center">
+            <a href="#hand_selector" class="btn orange modal-trigger">Select Hand Cards </a>
+            <a href="#flop_selector" class="btn orange modal-trigger">Select flop Cards </a>
+            <a href="#turn_selector" class="btn orange modal-trigger">Select turn Cards </a>
+            <a href="#river_selector" class="btn orange modal-trigger">Select river Cards </a>
+        </p>
+        <!-- Board Div -->
+        <main class="width-80 row col s12 z-depth-3 blue-grey darken-4 circle">
+
+            <!-- Div for board background and card images -->
+            <div class="inlineb board waves-circle" id="board">
+                <!-- Display 3 Flop cards after they are selected hide if they aren't -->
+                {% if flop_cards %}
+                <img class="margin-top10 flop" id="card"
+                    src="{% get_static_prefix %}poker_app/images/{{ flop_cards.0.0 }}{{ flop_cards.0.1 }}.png">
+                <img class="margin-top10 flop" id="card"
+                    src="{% get_static_prefix %}poker_app/images/{{ flop_cards.1.0 }}{{ flop_cards.1.1 }}.png">
+                <img class="margin-top10 flop" id="card"
+                    src="{% get_static_prefix %}poker_app/images/{{ flop_cards.2.0 }}{{ flop_cards.2.1 }}.png">
+                {% endif %}
+                <br>
+                {% if turn_card %}
+                <img class="turn" id="card"
+                    src="{% get_static_prefix %}poker_app/images/{{ turn_card.0 }}{{ turn_card.1 }}.png">
+                {% endif %}
+                {% if river_card %}                    
+                <img class="river" id="card"
+                    src="{% get_static_prefix %}poker_app/images/{{ river_card.0 }}{{ river_card.1 }}.png">
+                {% endif %}    
+            </div>
+        </main>
+
+    </div>
+    <!-- Calculate Hand Button -->
+    <div class="inlineb right top" style="position: absolute; top: 22%; right: 4%">
+        <a href="/calculate_hand" class="btn  orange z-depth-2">Calculate</a>
+    </div>
+    <!-- Modal to select cards in hand -->
+    <div class="modal row" id="hand_selector" style="padding: 2%; background:rgba(255,255,255,0.5);">
+        <h4 class="center"> Select Cards In Hand: </h4>
+
+    <!-- Form to Select Hand Cards -->
+    <form action="/submit_hand_cards" method="post" class="col s12 center-align">
+            {% csrf_token %}
+
+            <div class="row col s12">
+                <p class="col left s3 ">First Card:</p>
+
+                <!-- Select suit of first card -->
+                <select type="number" name="first_card_suit" class="col s3 inlineb">
+                    <option value="select_suit" disabled selected>Select Suit</option>
+                    <option value="Clubs">Clubs</option>
+                    <option value="Diamonds">Diamonds</option>
+                    <option value="Hearts">Hearts</option>
+                    <option value="Spades">Spades</option>
+                </select>
+
+                <!-- Select value of first card -->
+                <select type="number" name="first_card_value" class="col s3 inlineb">
+                    <option value="select_value" disabled selected>Select Value</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="jack">Jack</option>
+                    <option value="queen">Queen</option>
+                    <option value="king">King</option>
+                    <option value="ace">Ace</option>
+                </select>
+            </div>
+
+            <div class="row col s12">
+
+                <p class="col left s3 ">Second Card:</p>
+
+                <!-- Select suit of second card -->
+                <select name="second_card_suit" class="col s3 inlineb">
+                    <option value="select_suit" disabled selected>Select Suit</option>
+                    <option value="Clubs">Clubs</option>
+                    <option value="Diamonds">Diamonds</option>
+                    <option value="Hearts">Hearts</option>
+                    <option value="Spades">Spades</option>
+                </select>
+
+                <!-- Select value of second card -->
+                <select type="number" name="second_card_value" class="col s3 inlineb">
+                    <option value="select_value" disabled selected>Select Value</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="jack">Jack</option>
+                    <option value="queen">Queen</option>
+                    <option value="king">King</option>
+                    <option value="ace">Ace</option>
+                </select>
+            </div>
+
+            <input type="submit" value="Submit Cards" class="btn-small green accent-4">
+    </form>
+    </div> <!-- End Hand Selector Modal -->
+
+    <!-- Modal to select Flop Cards -->
+    <div class="modal row" id="flop_selector" style="padding: 2%; background:rgba(255,255,255,0.5);">
+        <h4 class="center"> Select Cards In Flop: </h4>
+
+        <!-- Form to select Flop cards -->
+        <form action="/submit_flopcards" method="post" class="col s12 center-align">
+            {% csrf_token %}
+
+            <div class="row col s12">
+                <p class="col left s3">First Card:</p>
+
+                <!-- Select suit of first card -->
+                <select name="first_card_suit" class="col s3 inlineb">
+                    <option value="select_suit" disabled selected>Select Suit</option>
+                    <option value="Clubs">Clubs</option>
+                    <option value="Diamonds">Diamonds</option>
+                    <option value="Hearts">Hearts</option>
+                    <option value="Spades">Spades</option>
+                </select>
+
+                <!-- Select value of first card -->
+                <select type="number" name="first_card_value" class="col s3 inlineb">
+                    <option value="select_value" disabled selected>Select Value</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="jack">Jack</option>
+                    <option value="queen">Queen</option>
+                    <option value="king">King</option>
+                    <option value="ace">Ace</option>
+                </select>
+            </div>
+
+            <div class="row col s12">
+                <p class="col left s3">Second Card:</p>
+
+                <!-- Select suit of second card -->
+                <select name="second_card_suit" class="col s3 inlineb">
+                    <option value="select_suit" disabled selected>Select Suit</option>
+                    <option value="Clubs">Clubs</option>
+                    <option value="Diamonds">Diamonds</option>
+                    <option value="Hearts">Hearts</option>
+                    <option value="Spades">Spades</option>
+                </select>
+
+                <!-- Select value of second card -->
+                <select type="number" name="second_card_value" class="col s3 inlineb">
+                    <option value="select_value" disabled selected>Select Value</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="jack">Jack</option>
+                    <option value="queen">Queen</option>
+                    <option value="king">King</option>
+                    <option value="ace">Ace</option>
+                </select>
+            </div>
+
+            <div class="row col s12">
+                <p class="col left s3">Third Card:</p>
+                <!-- Select suit of third card -->
+                <select name="third_card_suit" class="col s3 inlineb">
+                    <option value="select_suit" disabled selected>Select Suit</option>
+                    <option value="Clubs">Clubs</option>
+                    <option value="Diamonds">Diamonds</option>
+                    <option value="Hearts">Hearts</option>
+                    <option value="Spades">Spades</option>
+                </select>
+
+                <!-- Select value of third card -->
+                <select type="number" name="third_card_value" class="col s3 inlineb">
+                    <option value="select_value" disabled selected>Select Value</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="jack">Jack</option>
+                    <option value="queen">Queen</option>
+                    <option value="king">King</option>
+                    <option value="ace">Ace</option>
+                </select>
+            </div>
+            <input type="submit" value="Submit Cards" class=" inlineb btn-small green accent-4">
+        </form>
+    </div>
+    <!--End Flop Selector Modal -->
+
+    <!-- Modal to select Turn Card -->
+    <div class="modal row" id="turn_selector" style="padding: 2%; background:rgba(255,255,255,0.5);">
+        <h4 class="center"> Select Turn Card: </h4>
+
+        <!-- Form to select Turn Card -->
+        <form action="/submit_turn_card" method="post" class="col s12 center-align">
+            {% csrf_token %}
+
+            <div class="row col s12">
+                <p class="col left s3 ">Turn Card:</p>
+
+                <!-- Select suit of Turn card -->
+                <select name="turn_card_suit" class="col s3 inlineb">
+                    <option value="select_suit" disabled selected>Select Suit</option>
+                    <option value="Clubs">Clubs</option>
+                    <option value="Diamonds">Diamonds</option>
+                    <option value="Hearts">Hearts</option>
+                    <option value="Spades">Spades</option>
+                </select>
+
+                <!-- Select value of Turn card -->
+                <select name="turn_card_value" class="col s3 inlineb">
+                    <option value="select_value" disabled selected>Select Value</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="jack">Jack</option>
+                    <option value="queen">Queen</option>
+                    <option value="king">King</option>
+                    <option value="ace">Ace</option>
+                </select>
+            </div>
+
+            <input type="submit" value="Submit Cards" class=" inlineb btn-small green accent-4">
+        </form>
+    </div> <!-- End Turn Selector Modal -->
+
+    <!-- Modal to Select River Card -->
+    <div class="modal row" id="river_selector" style="padding: 2%; background:rgba(255,255,255,0.5);">
+
+        <h4 class="center"> Select Turn Card: </h4>
+
+        <!-- Form to select River Card -->
+        <form action="/submit_river_card" method="post" class="col s12 center-align">
+            {% csrf_token %}
+
+            <div class="row col s12">
+                <p class="col left s3 ">Turn Card:</p>
+
+                <!-- Select suit of River card -->
+                <select name="river_card_suit" class="col s3 inlineb">
+                    <option value="select_suit" disabled selected>Select Suit</option>
+                    <option value="Clubs">Clubs</option>
+                    <option value="Diamonds">Diamonds</option>
+                    <option value="Hearts">Hearts</option>
+                    <option value="Spades">Spades</option>
+                </select>
+
+                <!-- Select value of River card -->
+                <select name="river_card_value" class="col s3 inlineb">
+                    <option value="select_value" disabled selected>Select Value</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="jack">Jack</option>
+                    <option value="queen">Queen</option>
+                    <option value="king">King</option>
+                    <option value="ace">Ace</option>
+                </select>
+            </div>
+
+            <input type="submit" value="Submit Cards" class=" inlineb btn-small green accent-4">
+        </form>
+    </div> <!-- End River Selector Modal-->
+
+    <!-- JavaScript to initialize Modals -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.modal');
+            var instances = M.Modal.init(elems);
+        });
+    </script>
+</body>
+
+</html>
