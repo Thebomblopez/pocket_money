@@ -12,7 +12,7 @@ def index(request):
     request.session["flop_cards"] = helpers.is_flop(request.session)
     request.session["turn_card"] = helpers.is_turn(request.session)
     request.session["river_card"] = helpers.is_river(request.session)
-    print(request.session["used_cards"])
+    # print(request.session["used_cards"])
 
     return render(request, 'poker_app/hand_calculator.html', request.session)
 
@@ -82,14 +82,26 @@ def submit_river_card(request):
 
 # Calculate Hand
 def calculate_hand(request):
+    completed_hands = []
     # print(request.session['used_cards'])
     repeated = id.value_repeats(request.session['used_cards'])
-    print(repeated)
-    print(id.check_card_repeats(repeated))
-    
-    # print("check_flush",id.check_flush(request.session['used_cards']))
-    # print("check_straights",id.check_straights(request.session['used_cards']))
+    print("Repeated Values",repeated)
 
+    if repeated != None:
+        checked = id.check_card_repeats(repeated)
+        completed_hands.append([checked[0], checked[1]]) 
+
+    flush = id.flushes(request.session['used_cards'])
+    print("Flushes: ", flush)
+
+    if flush != None:
+        checked = id.check_flushes(flush)
+        completed_hands.append([ checked[0], checked[1], checked[2] ])
+
+    print("Completed Hands: ", completed_hands)
+
+    # print("check_straights",id.straights(request.session['used_cards']))
+    print(completed_hands)
     return redirect('/')
 
 

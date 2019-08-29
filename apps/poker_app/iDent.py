@@ -21,7 +21,6 @@ amount_cards = 4
 
 # Recieve All cards that are counted to an amount greater than 1
 def value_repeats(used_cards):
-    
     counts = []
     for card in used_cards:
         if counts == []:
@@ -38,21 +37,30 @@ def value_repeats(used_cards):
     return repeats
 
 # Return any flushes
-def check_flush(used_cards):
-    counts = {}
+def flushes(used_cards):
+    counts = []
+    used_cards = helpers.convert_vals(used_cards)
+    used_cards.sort(key=itemgetter(0))
+    used_cards.sort
     for card in used_cards:
-        if card[1] in counts.keys():
-            counts[card[1]] += 1
+        if counts == []:
+            counts.append([card])
         else:
-            counts[card[1]] = 1
-    flushes = {}
-    for k, v in counts.items():
-        if v >= 5:
-            flushes[k] = v
+            added = False
+            for arr in counts:
+                if arr[0][1] == card[1]:
+                    arr.append(card)
+                    added = True
+            if added == False:
+                counts.append([card])
+    
+    flushes = [x for x in counts if len(x)>= 5]
+    flushes = list(map(lambda x: helpers.revert_vals(x), flushes))
+
     return flushes
 
 # Return Straights
-def check_straights(used_cards):
+def straights(used_cards):
     used_cards = helpers.convert_vals(used_cards)
     used_cards.sort(key=itemgetter(0))
 
@@ -94,24 +102,25 @@ def check_straights(used_cards):
 # Check card reapeats
 def check_card_repeats(repeated_cards):
     if len(repeated_cards) == 1 and len(repeated_cards[0]) == 3:
-
-        return "Three of a kind " + repeated_cards[0][0][0]+"'s"
+        return [4, repeated_cards[0][0][0]+"'s"]
     
     if len(repeated_cards) == 1 and len(repeated_cards[0]) == 2:
-        return "Pair of " + repeated_cards[0][0][0]+"'s"
+        return [2,repeated_cards[0][0][0]+"'s"]
 
     if len(repeated_cards) == 1 and len(repeated_cards[0]) == 4:
-        return "Four of a kind " + repeated_cards[0][0][0]+"'s"
+        return [8,repeated_cards[0][0][0]+"'s"]
 
     if len(repeated_cards) == 2:
         if len(repeated_cards[0]) == 2 and len(repeated_cards[1]) == 2:
-            return "Two Pairs " + repeated_cards[0][0][0]+"'s"+" and"+ repeated_cards[1][0][0]+"'s"
+            return [3,repeated_cards[0][0][0]+"'s"+" and"+ repeated_cards[1][0][0]+"'s"]
 
         if len(repeated_cards[0]) == 3 and len(repeated_cards[1]) == 2:
-            return "Full House Three" + repeated_cards[0][0][0]+"'s"+" and two "+ repeated_cards[1][0][0]+"'s"
+            return [7,repeated_cards[0][0][0]+"'s"+" and two "+ repeated_cards[1][0][0]+"'s"]
 
-        if len(repeated_cards[1]) == 3 and len(repeated_cards[1]) == 2:
-            return "Full House Three" + repeated_cards[1][0][0]+"'s"+" and two "+ repeated_cards[0][0][0]+"'s"
+        if len(repeated_cards[1]) == 3 and len(repeated_cards[1]) == 3:
+            return [7, "Three "+ repeated_cards[1][0][0]+"'s"+" and two "+ repeated_cards[0][0][0]+"'s"]
 
-
+# Check Flush and prepare to add it to Completed Hands
+def check_flushes(flush):
+    return [ 6, flush[-1][-1][1]+"'s", flush[-1][-1][0]+" high" ]
 

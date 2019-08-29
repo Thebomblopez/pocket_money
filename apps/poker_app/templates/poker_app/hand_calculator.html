@@ -73,7 +73,11 @@
         {% endif %}
 
         <!-- Display hand and possibilitties -->
-
+        {% if player_hand %}
+        <p>
+            Hand: {{ player_hand }}
+        </p>
+        {% endif %}
     </div>
     <!-- Maing Content -->
     <div id="wrapper" class="container">

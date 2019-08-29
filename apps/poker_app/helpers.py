@@ -167,4 +167,23 @@ def convert_vals(cards):
 
     return cards
 
+# Rever card values back to String
+def revert_vals(cards):
+    for card in cards:
+        if card[0] < 9:
+            card[0] += 2
+            card[0] = str(card[0])
+        
+        elif card[0] == 9:
+            card[0] = "jack"
+        
+        elif card[0] == 10:
+            card[0] = "queen"
+        
+        elif card[0] == 11:
+            card[0] = "king"
 
+        elif card[0] == 12:
+            card[0] = "ace"
+    
+    return cards
