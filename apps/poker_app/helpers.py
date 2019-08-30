@@ -1,3 +1,5 @@
+import apps.poker_app.iDent as id
+
 # Remove previously added cards to session before adding more and setting new ones
 def reset_used_hand(session):
     hand = session['hand_cards']
@@ -169,6 +171,7 @@ def convert_vals(cards):
 
 # Rever card values back to String
 def revert_vals(cards):
+
     for card in cards:
         if card[0] < 9:
             card[0] += 2
@@ -187,3 +190,51 @@ def revert_vals(cards):
             card[0] = "ace"
     
     return cards
+
+# Return the strongest of the complete hands
+def strongest_hand(completed_hands):
+    strongest = completed_hands[0]
+    for hand in completed_hands:
+        try:
+            if hand[0] > strongest[0]:
+                strongest = hand
+        except:
+            strongest = strongest 
+
+    return id.Hands[strongest[0]] +" "+ strongest[1]
+
+# Calculate Odds of possible hands after Flop
+def flop_odds(possible_hands):
+    strongest = possible_hands[0]
+    for hand in possible_hands:
+        if hand[0] > strongest[0]:
+            strongest = hand
+    return id.Hands[strongest[0]]+ " of "+ strongest[1]+"'s "+str(strongest[2]*4)+"% chance"
+# Remove Nones
+def remove_none(arr):
+    for x in arr:
+        if x == None:
+            arr.remove(x)
+    return arr
+
+# Calculate Odds of possible hands after Turn
+def turn_odds(possible_hands):
+    strongest = possible_hands[0]
+    for hand in possible_hands:
+        if hand and hand[0] > strongest[0]:
+            strongest = hand
+            
+    return id.Hands[strongest[0]]+ " of "+ strongest[1]+"'s "+str(strongest[2]*2)+"% chance"
+
+# Return if Stronger Hand is Possible
+def possibly_stronger(completed, possible):
+    strongest = completed[0]
+    validated = False
+    for hand in completed:
+        if hand[0] > strongest[0]:
+            strongest = hand
+    print("strongest from comleted", strongest)
+    for hand in possible:
+        if hand[0] > strongest[0]:
+            validated = True
+    return validated

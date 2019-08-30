@@ -75,7 +75,13 @@
         <!-- Display hand and possibilitties -->
         {% if player_hand %}
         <p>
-            Hand: {{ player_hand }}
+            Hand:<br> {{ player_hand }}
+        </p>
+        {% endif %}
+
+        {% if possible_hand %}
+        <p>
+            Possible:<br> {{ possible_hand }}
         </p>
         {% endif %}
     </div>
@@ -84,7 +90,9 @@
         <!-- Top nav a bar and display messages. -->
         <nav>
             <div class="nav-wrapper green accent-4 z-depth-2">
+                <a href="/clear_board" class="inlineb left btn" style="margin-top: 1%;">Clear Table</a>
                 <a href="/" class="brand-logo center">PocketMoney</a>
+
             </div>
         </nav>
         <div id="flash_messages">
