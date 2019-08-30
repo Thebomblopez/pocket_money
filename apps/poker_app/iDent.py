@@ -51,7 +51,6 @@ def flushes(used_cards):
     for card in used_cards:
         if counts == []:
             counts.append([ card ])
-            print("Counts in first iter: ", counts)
         else:
             added = False
             for i in range(len(counts)):
@@ -77,7 +76,7 @@ def straights(used_cards):
     cards = []
     temp = ''
     straights = []
-    
+    possibles = []
     for i in range(len(used_cards)):
         if cards == []:
             temp = used_cards[i]
@@ -100,7 +99,13 @@ def straights(used_cards):
             cards.pop()
             temp = used_cards[i]
             cards.append(temp)
-                
+
+        elif used_cards[i][0] != temp[0] + 1 and count == 4:
+            possibles.append(cards)
+            temp = used_cards[i]
+            cards = [temp]
+            count = 1
+
         else:
             count = 1
             temp = used_cards[i]
@@ -108,7 +113,7 @@ def straights(used_cards):
     
     used_cards = helpers.revert_vals(used_cards)
       
-    return straights
+    return straights, possibles
 
 # Check card reapeats
 def check_repeats(repeated_cards):
@@ -117,10 +122,10 @@ def check_repeats(repeated_cards):
         return [ [ 1,repeated_cards[0]+' of '+repeated_cards[1] ], [ 2, repeated_cards[0], 3 ] ]
     # Three of a kind
     if len(repeated_cards) == 1 and len(repeated_cards[0]) == 3:
-        return [ [ 4, repeated_cards[0][0][0] ], [ 8, repeated_cards[0][0][0], 1 ] ]
+        return [ [ 4, repeated_cards[0][0][0]+"'s" ], [ 8, repeated_cards[0][0][0], 1 ] ]
     # Pair
     if len(repeated_cards) == 1 and len(repeated_cards[0]) == 2:
-        return [ [ 2,repeated_cards[0][0][0] ], [ 4, repeated_cards[0][0][0], 2 ] ]
+        return [ [ 2,repeated_cards[0][0][0]+"'s" ], [ 4, repeated_cards[0][0][0], 2 ] ]
     # Four of a kind
     if len(repeated_cards) == 1 and len(repeated_cards[0]) == 4:
         return [ [ 8,repeated_cards[0][0][0] ], None ]
@@ -166,6 +171,10 @@ def check_flushes(flush):
 
 # Check Straights and prepare to add it to Comleted Hands
 def check_straights(straights):
-    return [ 5, straights[-1][-1][0] + " high" ]
+    if straights[0] == [] and len(straights[1]) > 0:
+        return [ [ ], [ 5, str(int(straights[1][0][-1][0])+1)+" high", 4 ] ]
+    
+    if straights[1] == [] and len(straights[0]) > 0:
+        return [ [ 5,  straights[0][0][-1][0]+" high" ], [] ]
 
 
