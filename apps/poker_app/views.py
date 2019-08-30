@@ -92,16 +92,13 @@ def calculate_hand(request):
     # Check if there are any repeated card values
     repeated = id.repeats(request.session['used_cards'])
     # If there are repeated Values add the hand to completed Hands
-    print("repeated: ", repeated)
     if len(repeated) > 0:
         checked =  id.check_repeats(repeated) 
-            
         completed_hands.append(checked[0])
         possible_hands.append(checked[1])
+    
     #  Check if there is a flush
-    # print("Used Cards: ", request.session['used_cards'])
     flush = id.flushes(request.session['used_cards'])
-    print("Flushes: ", flush)
     # If there is a flush add it to completed hands
     if flush != ( [], [] ):
         checked = id.check_flushes(flush)
@@ -111,19 +108,23 @@ def calculate_hand(request):
             possible_hands.append(checked[1])
 
     # Check for Straights
-    # straights = id.straights(request.session['used_cards'])
+    straights = id.straights(request.session['used_cards'])
+    print("Straights result: ", straights)
     # If there is a Straight add the strongest one to complete hands
-    # if straights != []:
-    #     checked = id.check_straights(straights)
-    #     completed_hands.append([ checked[0], checked[1] ])
+    if straights != ( [], [] ):
+        checked = id.check_straights(straights)
+        if checked[0] != []:
+            completed_hands.append( [ checked[0][0], checked[0][1] ] )
+        if checked[1] != []:
+            possible_hands.append(checked[1])
+    
+    # Remove None vals from completed and possible hands
     possible_hands = helpers.remove_none(possible_hands)
     completed_hands = helpers.remove_none(completed_hands)
-    print("Completed Hands: ", completed_hands)
-    print("Possible Hands: ", possible_hands)
+
     if completed_hands != []:
         request.session['player_hand'] = helpers.strongest_hand(completed_hands)
 
-    
     # Checking possible hands after the Flop
     if len(request.session['used_cards']) == 5 and possible_hands != [] and helpers.possibly_stronger(completed_hands, possible_hands):
         request.session['possible_hand'] = helpers.flop_odds(possible_hands)
