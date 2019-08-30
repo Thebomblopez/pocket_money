@@ -11,4 +11,8 @@ urlpatterns = [
     url(r'^submit_river_card$', views.submit_river_card), 
     url(r'^calculate_hand$', views.calculate_hand),   
     url(r'^clear_board$', views.clear_board),
+    url(r'^random_hand$', views.random_hand),
+    url(r'^random_flop$', views.random_flop),
+    url(r'^random_turn$', views.random_turn),
+    url(r'^random_river$', views.random_river),
 ]

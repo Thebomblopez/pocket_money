@@ -1,4 +1,14 @@
 import apps.poker_app.iDent as id
+import random 
+
+# Cards and Suits
+vals = ['2','3','4','5','6','7','8','9','10','jack','queen','king','ace']
+suits = ['Spades','Hearts','Diamonds','Clubs']
+# Create Deck
+deck = []
+for suit in suits:
+    for val in vals:
+        deck.append([val, suit])
 
 # Remove previously added cards to session before adding more and setting new ones
 def reset_used_hand(session):
@@ -210,6 +220,7 @@ def flop_odds(possible_hands):
         if hand[0] > strongest[0]:
             strongest = hand
     return id.Hands[strongest[0]]+ " of "+ strongest[1]+"'s "+str(strongest[2]*4)+"% chance"
+
 # Remove Nones
 def remove_none(arr):
     for x in arr:
@@ -238,3 +249,13 @@ def possibly_stronger(completed, possible):
         if hand[0] > strongest[0]:
             validated = True
     return validated
+
+# Random Card
+def random_card(used_cards):
+    card = random.choice(deck)
+    while card in used_cards:
+        card = random.choice(deck)
+    return card
+
+
+

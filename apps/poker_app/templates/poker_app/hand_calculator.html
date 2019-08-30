@@ -144,8 +144,8 @@
     </div>
     <!-- Modal to select cards in hand -->
     <div class="modal row" id="hand_selector" style="padding: 2%; background:rgba(255,255,255,0.5);">
-        <h4 class="center"> Select Cards In Hand: </h4>
-
+        <h4 class="center"> Select Cards In Hand:  </h4>
+        <a class="btn-small" href="/random_hand"> Random Cards </a>
     <!-- Form to Select Hand Cards -->
     <form action="/submit_hand_cards" method="post" class="col s12 center-align">
             {% csrf_token %}
@@ -220,7 +220,7 @@
     <!-- Modal to select Flop Cards -->
     <div class="modal row" id="flop_selector" style="padding: 2%; background:rgba(255,255,255,0.5);">
         <h4 class="center"> Select Cards In Flop: </h4>
-
+        <a class="btn-small" href="/random_flop"> Random Cards </a>
         <!-- Form to select Flop cards -->
         <form action="/submit_flopcards" method="post" class="col s12 center-align">
             {% csrf_token %}
@@ -324,7 +324,7 @@
     <!-- Modal to select Turn Card -->
     <div class="modal row" id="turn_selector" style="padding: 2%; background:rgba(255,255,255,0.5);">
         <h4 class="center"> Select Turn Card: </h4>
-
+        <a class="btn-small" href="/random_turn"> Random Cards </a>
         <!-- Form to select Turn Card -->
         <form action="/submit_turn_card" method="post" class="col s12 center-align">
             {% csrf_token %}
@@ -368,7 +368,7 @@
     <div class="modal row" id="river_selector" style="padding: 2%; background:rgba(255,255,255,0.5);">
 
         <h4 class="center"> Select Turn Card: </h4>
-
+        <a class="btn-small" href="/random_river"> Random Cards </a>
         <!-- Form to select River Card -->
         <form action="/submit_river_card" method="post" class="col s12 center-align">
             {% csrf_token %}
