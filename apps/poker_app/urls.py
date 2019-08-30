@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^submit_turn_card$', views.submit_turn_card),
     url(r'^submit_river_card$', views.submit_river_card), 
     url(r'^calculate_hand$', views.calculate_hand),   
+    url(r'^clear_board$', views.clear_board),
 ]
